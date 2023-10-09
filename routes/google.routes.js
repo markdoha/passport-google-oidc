@@ -1,16 +1,20 @@
 const Router = require("express").Router();
-const authController = require("../controllers/auth.controller");
+const passport = require("passport");
+const passportSetup = require("../config/passport-setup");
 
-Router.get("/google", authController.google).get(
-  "/google/callback",
-  authController.googleCallback
-);
+Router.get(
+  "/google",
+  passport.authenticate('google', {
+    scope: ["profile"],
+  })
+).get("/google/callback", (req, res) => {
+  res.send("You reached the redirect URI");
+});
 
-Router.get("/logout", authController.logout);
+Router.get("/logout");
 
-Router.get("/facebook", authController.facebook).get(
+Router.get("/facebook").get(
   "/facebook/callback",
-  authController.facebookCallback
 );
 
-export default Router;
+module.exports = Router;
